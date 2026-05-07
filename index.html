@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Калькулятор вкладов 2026 | Рассчитать доходность онлайн</title>
+    <meta name="description" content="Калькулятор вкладов 2026 года. Учитывает ключевую ставку 17%, налоги, инфляцию, капитализацию. Бесплатно и точно.">
+    <meta name="keywords" content="калькулятор вкладов 2026, вклады 2026, депозит калькулятор 2026">
+    <meta name="author" content="FinCalc 2026">
+    <meta name="robots" content="index, follow">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f0f2f8;
+            --card: #ffffff;
+            --primary: #0a4d3b;
+            --primary-dark: #063524;
+            --accent: #e67e22;
+            --text: #1a2a3a;
+            --text-light: #5a6e7c;
+            --border: #e1e8f0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 28px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            cursor: pointer;
+        }
+        .header h1 { font-size: 1.8rem; }
+        .rate-badge {
+            background: var(--accent);
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 800;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 28px;
+        }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+        .card {
+            background: var(--card);
+            border-radius: 28px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent);
+            padding-left: 16px;
+        }
+
+        .input-field { margin-bottom: 20px; }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-size: 1rem;
+            background: white;
+        }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        .term-container {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 16px;
+        }
+        .term-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .term-value-large {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: white;
+            padding: 8px 20px;
+            border-radius: 60px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent) var(--percent, 50%), var(--border) var(--percent, 50%));
+            border-radius: 10px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+        }
+        .term-marks {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        .term-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .term-quick-btn {
+            flex: 1;
+            background: white;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+        }
+        .term-quick-btn:hover { background: var(--accent); color: white; }
+
+        .toggle-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .toggle-btn {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .toggle-btn.active { background: var(--primary); color: white; }
+
+        .results-panel {
+            background: linear-gradient(135deg, #fef9e8, #fff5e6);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* РЕКЛАМНЫЙ БЛОК С ФОРМОЙ */
+        .ad-block {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .ad-block h3 { 
+            font-size: 1.3rem;
+            margin-bottom: 12px; 
+            color: var(--accent);
+        }
+        .ad-block input {
+            background: white;
+            border: none;
+            padding: 14px 16px;
+            border-radius: 40px;
+            width: 100%;
+            margin: 12px 0;
+        }
+        .ad-block button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* БЛОК "ЗДЕСЬ МОГЛА БЫ БЫТЬ ВАША РЕКЛАМА" */
+        .placeholder-ad {
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 24px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+        .placeholder-ad:hover {
+            background: #eef2ff;
+            border-color: var(--accent);
+        }
+        .placeholder-ad span {
+            font-size: 1.1rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .placeholder-ad small {
+            display: block;
+            margin-top: 8px;
+            color: #94a3b8;
+            font-size: 0.7rem;
+        }
+
+        .useful-block {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6d9);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .useful-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); }
+        .useful-list { list-style: none; }
+        .useful-list li { padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .gov-link {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 40px;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            margin-top: 16px;
+        }
+
+        .subscribe-block {
+            background: #f1f5f9;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .subscribe-block h3 { color: var(--primary); margin-bottom: 8px; }
+        .subscribe-block input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            margin: 12px 0;
+        }
+        .subscribe-block button {
+            background: var(--primary);
+            width: 100%;
+        }
+
+        .tips-container { display: flex; flex-direction: column; gap: 12px; }
+        .tip-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border);
+        }
+        .tip-card:hover { background: #eef2ff; transform: translateX(5px); }
+
+        button { background: var(--accent); border: none; padding: 14px; border-radius: 40px; font-weight: 700; cursor: pointer; width: 100%; color: white; }
+        button:hover { background: #d35400; }
+
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-modal.active { display: flex; }
+        .admin-content {
+            background: white;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 32px;
+            padding: 28px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .admin-tab {
+            padding: 8px 20px;
+            background: #f1f5f9;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .admin-tab.active { background: var(--primary); color: white; }
+        .admin-pane { display: none; }
+        .admin-pane.active { display: block; }
+        .email-list {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .email-item {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .export-btn { background: #10b981; margin-top: 12px; }
+        .clear-btn { background: #ef4444; margin-top: 10px; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; max-width: 500px; width: 90%; border-radius: 32px; padding: 28px; }
+        .modal-close { float: right; font-size: 1.8rem; cursor: pointer; background: none; width: auto; color: #999; }
+        .modal-close:hover { background: none; color: black; }
+
+        footer { text-align: center; padding: 32px 20px; font-size: 0.75rem; border-top: 1px solid var(--border); margin-top: 40px; }
+        canvas { max-width: 100%; max-height: 220px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header" id="adminTrigger">
+        <div>
+            <h1>💰 Калькулятор вкладов 2026</h1>
+            <p style="opacity: 0.9;">Актуальные ставки, налоги, инфляция — 2026 год</p>
+        </div>
+        <div class="rate-badge">🔑 Ключевая ставка 17%</div>
+    </div>
+
+    <div class="grid">
+        <!-- ЛЕВАЯ КОЛОНКА -->
+        <div>
+            <div class="card">
+                <h2>📊 Рассчитайте свой вклад</h2>
+                
+                <div class="input-field">
+                    <label>💰 Сумма вклада (₽)</label>
+                    <input type="number" id="amount" value="1000000" step="50000">
+                </div>
+
+                <div class="input-field">
+                    <label>📈 Годовая ставка (%)</label>
+                    <input type="number" id="rate" value="18.5" step="0.5">
+                </div>
+
+                <div class="input-field">
+                    <label>⏱ Срок вклада</label>
+                    <div class="term-container">
+                        <div class="term-header">
+                            <span class="term-value-large" id="selectedMonthsDisplay">12</span>
+                            <span>месяцев</span>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="termSlider" min="1" max="36" value="12" step="1">
+                            <div class="term-marks">
+                                <span>1</span><span>6</span><span>12</span><span>18</span><span>24</span><span>30</span><span>36</span>
+                            </div>
+                        </div>
+                        <div class="term-buttons">
+                            <div class="term-quick-btn" data-months="3">3 мес</div>
+                            <div class="term-quick-btn" data-months="6">6 мес</div>
+                            <div class="term-quick-btn" data-months="12">1 год</div>
+                            <div class="term-quick-btn" data-months="24">2 года</div>
+                            <div class="term-quick-btn" data-months="36">3 года</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-field">
+                    <label>🔄 Капитализация</label>
+                    <div class="toggle-group" id="capGroup">
+                        <div class="toggle-btn" data-cap="none">Без кап.</div>
+                        <div class="toggle-btn active" data-cap="monthly">Ежемесячно</div>
+                    </div>
+                </div>
+
+                <div class="input-field">
+                    <label>➕ Ежемесячное пополнение (₽)</label>
+                    <input type="number" id="replenish" value="0" step="10000">
+                </div>
+
+                <div class="input-field">
+                    <label>🏛 Налог на проценты</label>
+                    <div class="toggle-group" id="taxGroup">
+                        <div class="toggle-btn" data-tax="false">❌ Нет</div>
+                        <div class="toggle-btn active" data-tax="true">✅ Да</div>
+                    </div>
+                </div>
+
+                <div class="input-field">
+                    <label>📉 Инфляция (прогноз 2026)</label>
+                    <input type="number" id="inflation" value="7.2" step="0.5">
+                </div>
+
+                <button id="calcBtn">🔥 Рассчитать</button>
+            </div>
+
+            <div class="card">
+                <h2>📈 Ваш доход</h2>
+                <div class="results-panel">
+                    <div class="result-item"><span>💰 Итоговая сумма:</span><span class="result-value" id="finalAmount">0 ₽</span></div>
+                    <div class="result-item"><span>📊 Начисленные проценты:</span><span class="result-value" id="totalInterest">0 ₽</span></div>
+                    <div class="result-item"><span>🏦 После налога:</span><span class="result-value" id="afterTax">0 ₽</span></div>
+                    <div class="result-item"><span>📉 Реальная доходность:</span><span class="result-value" id="realProfit">0 ₽</span></div>
+                    <div class="result-item"><span>⚡ Эффективная ставка:</span><span class="result-value" id="effectiveRate">0 %</span></div>
+                </div>
+                <canvas id="growthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ КОЛОНКА -->
+        <div>
+            <!-- РЕКЛАМНЫЙ БЛОК С ФОРМОЙ EMAIL -->
+            <div class="ad-block">
+                <h3>💼 Хотите эксклюзив?</h3>
+                <p>Оставьте email — получите лучшие ставки и персональные предложения</p>
+                <p style="font-size: 0.7rem; opacity: 0.8;">🔥 Только для посетителей сайта</p>
+                <input type="email" id="adEmailInput" placeholder="Ваш email">
+                <button id="adEmailBtn">📩 Получить предложения</button>
+                <p style="font-size: 0.65rem; margin-top: 10px; opacity: 0.6;">Никакого спама, только выгодные ставки</p>
+            </div>
+
+            <!-- БЛОК "ЗДЕСЬ МОГЛА БЫ БЫТЬ ВАША РЕКЛАМА" -->
+            <div class="placeholder-ad">
+                <span>📢 Здесь могла бы быть ваша реклама</span>
+                <small>Место для партнёрских баннеров или прямых рекламодателей</small>
+            </div>
+
+            <!-- ПОЛЕЗНЫЙ БЛОК -->
+            <div class="card">
+                <h2>💡 Как сохранить и приумножить</h2>
+                <div class="useful-block">
+                    <div class="useful-title">📌 Полезные факты</div>
+                    <ul class="useful-list">
+                        <li>🏦 <strong>До 1.4 млн ₽</strong> — застраховано государством</li>
+                        <li>📈 <strong>Капитализация</strong> даёт +1-2% годовых</li>
+                        <li>💰 <strong>Не храните</strong> более 1.4 млн в одном банке</li>
+                        <li>⚖️ <strong>Налог</strong> — только с процентов свыше 170 000 ₽</li>
+                    </ul>
+                    <a href="#" class="gov-link" id="infoLink">🏛 Узнать о госпрограммах →</a>
+                </div>
+            </div>
+
+            <!-- ФОРМА ПОДПИСКИ -->
+            <div class="subscribe-block">
+                <h3>📧 Бесплатная рассылка</h3>
+                <p>Лучшие стратегии сбережений — 1 раз в месяц</p>
+                <input type="email" id="subscribeEmail" placeholder="Ваш email">
+                <button id="subBtn">Подписаться</button>
+            </div>
+
+            <!-- КЛИКАБЕЛЬНЫЕ СОВЕТЫ -->
+            <div class="card">
+                <h2>💡 Финансовые советы</h2>
+                <div class="tips-container" id="tipsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Калькулятор вкладов. Не является офертой. Налог: 13% с процентов сверх 170 000 ₽.</p>
+        <p>🔍 калькулятор вкладов 2026, вклады 2026, депозит калькулятор, капитализация процентов</p>
+    </footer>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО ДЛЯ СОВЕТОВ -->
+<div id="tipModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle"></h3>
+        <div id="modalText"></div>
+    </div>
+</div>
+
+<!-- АДМИН-ПАНЕЛЬ -->
+<div id="adminModal" class="admin-modal">
+    <div class="admin-content">
+        <span class="modal-close" onclick="closeAdminModal()" style="float: right;">&times;</span>
+        <h2 style="color: var(--primary); margin-bottom: 20px;">🔐 Админ-панель</h2>
+        
+        <div id="loginBlock">
+            <label>Введите пароль:</label>
+            <input type="password" id="adminPassword" placeholder="Пароль" style="margin: 12px 0;">
+            <button id="loginBtn">Войти</button>
+        </div>
+        
+        <div id="adminContent" style="display: none;">
+            <div class="admin-tabs">
+                <div class="admin-tab active" data-tab="emails">📧 Email из рекламы</div>
+                <div class="admin-tab" data-tab="subscribers">📬 Подписчики</div>
+                <div class="admin-tab" data-tab="settings">⚙️ Настройки</div>
+            </div>
+            
+            <div id="tabEmails" class="admin-pane active">
+                <h3>📧 Собранные email (рекламный блок)</h3>
+                <div class="email-list" id="adEmailsList"></div>
+                <button class="export-btn" id="exportAdEmailsBtn">📎 Экспорт в CSV</button>
+                <button class="clear-btn" id="clearAdEmailsBtn">🗑 Очистить все</button>
+            </div>
+            
+            <div id="tabSubscribers" class="admin-pane">
+                <h3>📬 Подписчики (основная форма)</h3>
+                <div class="email-list" id="subscribersList"></div>
+                <button class="export-btn" id="exportSubsBtn">📎 Экспорт в CSV</button>
+                <button class="clear-btn" id="clearSubsBtn">🗑 Очистить всех</button>
+            </div>
+            
+            <div id="tabSettings" class="admin-pane">
+                <h3>⚙️ Настройки калькулятора</h3>
+                <div class="input-field">
+                    <label>📈 Ставка по умолчанию (%)</label>
+                    <input type="number" id="adminDefaultRate" step="0.5">
+                </div>
+                <div class="input-field">
+                    <label>📉 Инфляция по умолчанию (%)</label>
+                    <input type="number" id="adminDefaultInflation" step="0.5">
+                </div>
+                <button id="saveSettingsBtn">💾 Сохранить настройки</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== ПАРОЛЬ ==========
+    const ADMIN_PASSWORD = "838995";  // 👈 СМЕНИТЕ НА СВОЙ!
+    
+    const STORAGE_LEADS = "fincalc_ad_leads";
+    const STORAGE_SUBS = "subscribers2026";
+    
+    // Сохранение email из рекламного блока
+    function saveAdLead(email) {
+        let leads = JSON.parse(localStorage.getItem(STORAGE_LEADS) || '[]');
+        if (!leads.includes(email)) {
+            leads.push(email);
+            localStorage.setItem(STORAGE_LEADS, JSON.stringify(leads));
+            return true;
+        }
+        return false;
+    }
+    
+    document.getElementById('adEmailBtn').addEventListener('click', () => {
+        let email = document.getElementById('adEmailInput').value.trim();
+        if (!email || !email.includes('@')) {
+            alert('Введите корректный email');
+            return;
+        }
+        saveAdLead(email);
+        document.getElementById('adEmailInput').value = '';
+        alert('✅ Спасибо! Мы свяжемся с вами с лучшими предложениями.');
+    });
+    
+    // Обычная подписка
+    document.getElementById('subBtn').addEventListener('click', () => {
+        let email = document.getElementById('subscribeEmail').value.trim();
+        if (!email || !email.includes('@')) {
+            alert('Введите корректный email');
+            return;
+        }
+        let subs = JSON.parse(localStorage.getItem(STORAGE_SUBS) || '[]');
+        if (!subs.includes(email)) {
+            subs.push(email);
+            localStorage.setItem(STORAGE_SUBS, JSON.stringify(subs));
+        }
+        document.getElementById('subscribeEmail').value = '';
+        alert('✅ Подписка оформлена!');
+    });
+    
+    // ========== АДМИНКА ==========
+    const adminModal = document.getElementById('adminModal');
+    const loginBlock = document.getElementById('loginBlock');
+    const adminContent = document.getElementById('adminContent');
+    
+    let clickCount = 0;
+    let clickTimer;
+    document.getElementById('adminTrigger').addEventListener('click', () => {
+        clickCount++;
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => clickCount = 0, 800);
+        if (clickCount >= 3) {
+            adminModal.classList.add('active');
+            clickCount = 0;
+            loginBlock.style.display = 'block';
+            adminContent.style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+        }
+    });
+    
+    function closeAdminModal() { adminModal.classList.remove('active'); }
+    
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const pwd = document.getElementById('adminPassword').value;
+        if (pwd === ADMIN_PASSWORD) {
+            loginBlock.style.display = 'none';
+            adminContent.style.display = 'block';
+            loadAdminData();
+        } else {
+            alert('Неверный пароль!');
+        }
+    });
+    
+    function loadAdminData() {
+        const adLeads = JSON.parse(localStorage.getItem(STORAGE_LEADS) || '[]');
+        document.getElementById('adEmailsList').innerHTML = adLeads.length === 0 ? '<div style="color: #888; padding: 12px;">Нет email</div>' 
+            : adLeads.map((email, idx) => `<div class="email-item">${idx+1}. ${email}</div>`).join('');
+        
+        const subscribers = JSON.parse(localStorage.getItem(STORAGE_SUBS) || '[]');
+        document.getElementById('subscribersList').innerHTML = subscribers.length === 0 ? '<div style="color: #888; padding: 12px;">Нет подписчиков</div>' 
+            : subscribers.map((email, idx) => `<div class="email-item">${idx+1}. ${email}</div>`).join('');
+        
+        document.getElementById('adminDefaultRate').value = document.getElementById('rate').value;
+        document.getElementById('adminDefaultInflation').value = document.getElementById('inflation').value;
+    }
+    
+    function exportToCSV(emails, filename) {
+        const csvContent = "Email\n" + emails.join("\n");
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+    
+    document.getElementById('exportAdEmailsBtn').addEventListener('click', () => {
+        exportToCSV(JSON.parse(localStorage.getItem(STORAGE_LEADS) || '[]'), 'reklama_emails.csv');
+    });
+    document.getElementById('exportSubsBtn').addEventListener('click', () => {
+        exportToCSV(JSON.parse(localStorage.getItem(STORAGE_SUBS) || '[]'), 'podpischiki.csv');
+    });
+    document.getElementById('clearAdEmailsBtn').addEventListener('click', () => {
+        if (confirm('Удалить все email из рекламного блока?')) {
+            localStorage.setItem(STORAGE_LEADS, '[]');
+            loadAdminData();
+            alert('Очищено');
+        }
+    });
+    document.getElementById('clearSubsBtn').addEventListener('click', () => {
+        if (confirm('Удалить всех подписчиков?')) {
+            localStorage.setItem(STORAGE_SUBS, '[]');
+            loadAdminData();
+            alert('Очищено');
+        }
+    });
+    document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        let newRate = parseFloat(document.getElementById('adminDefaultRate').value);
+        let newInflation = parseFloat(document.getElementById('adminDefaultInflation').value);
+        if (!isNaN(newRate)) document.getElementById('rate').value = newRate;
+        if (!isNaN(newInflation)) document.getElementById('inflation').value = newInflation;
+        calculate();
+        alert('Настройки сохранены!');
+    });
+    
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.admin-pane').forEach(pane => pane.classList.remove('active'));
+            if (tab.dataset.tab === 'emails') document.getElementById('tabEmails').classList.add('active');
+            if (tab.dataset.tab === 'subscribers') document.getElementById('tabSubscribers').classList.add('active');
+            if (tab.dataset.tab === 'settings') document.getElementById('tabSettings').classList.add('active');
+        });
+    });
+    
+    // ========== КАЛЬКУЛЯТОР ==========
+    let chart;
+    let currentCap = 'monthly';
+    
+    const amountInput = document.getElementById('amount');
+    const rateInput = document.getElementById('rate');
+    const termSlider = document.getElementById('termSlider');
+    const termMonthsDisplay = document.getElementById('selectedMonthsDisplay');
+    const replenishInput = document.getElementById('replenish');
+    const inflationInput = document.getElementById('inflation');
+    
+    function updateSliderColor() {
+        const val = (termSlider.value - termSlider.min) / (termSlider.max - termSlider.min) * 100;
+        termSlider.style.setProperty('--percent', val + '%');
+        termMonthsDisplay.innerText = termSlider.value;
+    }
+    
+    function setTerm(value) {
+        let v = parseInt(value);
+        if (isNaN(v)) v = 12;
+        v = Math.min(36, Math.max(1, v));
+        termSlider.value = v;
+        updateSliderColor();
+        calculate();
+    }
+    
+    termSlider.addEventListener('input', (e) => {
+        termMonthsDisplay.innerText = e.target.value;
+        updateSliderColor();
+        calculate();
+    });
+    
+    document.querySelectorAll('.term-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => setTerm(btn.dataset.months));
+    });
+    
+    document.querySelectorAll('#capGroup .toggle-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#capGroup .toggle-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentCap = this.dataset.cap;
+            calculate();
+        });
+    });
+    
+    const TAX_FREE_LIMIT = 170000;
+    
+    function calculate() {
+        let P = parseFloat(amountInput.value) || 0;
+        let annualRate = parseFloat(rateInput.value) || 0;
+        let months = parseInt(termSlider.value) || 1;
+        let replenish = parseFloat(replenishInput.value) || 0;
+        let inflationYear = parseFloat(inflationInput.value) || 0;
+        
+        if (P < 0) P = 0;
+        if (months < 1) months = 1;
+        
+        let balance = P;
+        let totalInterest = 0;
+        let monthlyBalances = [P];
+        
+        if (currentCap === 'none') {
+            let simpleInterest = P * (annualRate / 100) * (months / 12);
+            totalInterest = simpleInterest;
+            balance = P + simpleInterest + replenish * months;
+            for (let i = 1; i <= months; i++) {
+                let val = P + (P * (annualRate / 100) * (i / 12)) + replenish * i;
+                monthlyBalances.push(Math.max(0, val));
+            }
+        } else {
+            let monthlyRate = annualRate / 100 / 12;
+            let currentBalance = P;
+            for (let i = 1; i <= months; i++) {
+                let interest = currentBalance * monthlyRate;
+                totalInterest += interest;
+                currentBalance += interest;
+                if (replenish > 0) currentBalance += replenish;
+                monthlyBalances.push(currentBalance);
+            }
+            balance = currentBalance;
+        }
+        
+        let taxableInterest = Math.max(0, totalInterest - TAX_FREE_LIMIT);
+        let taxAmount = taxableInterest * 0.13;
+        let afterTaxBalance = balance - taxAmount;
+        let inflationFactor = Math.pow(1 + inflationYear / 100, months / 12);
+        let realBalance = balance / inflationFactor;
+        let realProfit = realBalance - P;
+        let effectiveRate = currentCap === 'monthly' ? (Math.pow(1 + annualRate / 100 / 12, 12) - 1) * 100 : annualRate;
+        
+        document.getElementById('finalAmount').innerHTML = balance.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+        document.getElementById('totalInterest').innerHTML = totalInterest.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+        document.getElementById('afterTax').innerHTML = afterTaxBalance.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+        document.getElementById('realProfit').innerHTML = realProfit.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' ₽';
+        document.getElementById('effectiveRate').innerHTML = effectiveRate.toLocaleString('ru-RU', {minimumFractionDigits: 2}) + ' %';
+        
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: monthlyBalances.map((_, idx) => idx), datasets: [{ label: 'Рост вклада (₽)', data: monthlyBalances, borderColor: '#e67e22', fill: true, tension: 0.3, pointRadius: 2 }] },
+            options: { responsive: true, maintainAspectRatio: true }
+        });
+    }
+    
+    // Советы
+    const tipsData = [
+        { icon: "📈", title: "Правило 72", short: "Как быстро удвоить капитал", fullTitle: "Правило 72", fullText: "Разделите 72 на годовую ставку — получите срок удвоения в годах. При 18% — 4 года." },
+        { icon: "🏦", title: "Налог на вклады", short: "Как платить в 2026", fullTitle: "Налог на вклады 2026", fullText: "Не облагается 170 000 ₽ процентов (1 млн × 17%). Сверх этого — 13%." },
+        { icon: "📉", title: "Инфляция", short: "Почему она важна", fullTitle: "Инфляция и вклады", fullText: "Реальная ставка = (1+ставка)/(1+инфляция)-1." },
+        { icon: "🔄", title: "Капитализация", short: "Что выгоднее", fullTitle: "Капитализация процентов", fullText: "При капитализации проценты начисляются на проценты." }
+    ];
+    
+    function renderTips() {
+        const container = document.getElementById('tipsContainer');
+        container.innerHTML = '';
+        tipsData.forEach(tip => {
+            const div = document.createElement('div');
+            div.className = 'tip-card';
+            div.innerHTML = `<div style="font-size:1.8rem">${tip.icon}</div><div><div style="font-weight:700">${tip.title}</div><div style="font-size:0.8rem;color:var(--text-light)">${tip.short}</div></div>`;
+            div.onclick = () => openModal(tip.fullTitle, tip.fullText);
+            container.appendChild(div);
+        });
+    }
+    
+    function openModal(title, text) {
+        document.getElementById('modalTitle').innerHTML = title;
+        document.getElementById('modalText').innerHTML = `<p style="line-height:1.6">${text}</p>`;
+        document.getElementById('tipModal').classList.add('active');
+    }
+    function closeModal() { document.getElementById('tipModal').classList.remove('active'); }
+    window.onclick = (e) => { if (e.target === document.getElementById('tipModal')) closeModal(); if (e.target === adminModal) closeAdminModal(); };
+    
+    document.getElementById('infoLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal('Госпрограммы', '🏛 ИИС с вычетом до 60 000 ₽, ПДС с софинансированием до 36 000 ₽ в год.');
+    });
+    
+    amountInput.addEventListener('input', calculate);
+    rateInput.addEventListener('input', calculate);
+    replenishInput.addEventListener('input', calculate);
+    inflationInput.addEventListener('input', calculate);
+    document.getElementById('calcBtn').addEventListener('click', calculate);
+    
+    updateSliderColor();
+    renderTips();
+    calculate();
+</script>
+</body>
+</html>
